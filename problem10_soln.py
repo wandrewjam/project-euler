@@ -33,21 +33,21 @@ def is_prime(n):
         return True
 
 
-# start = timer()
+start = timer()
 limit = 2*10**6
-# sum = 5
-# n = 5
-# while n <= limit:
-#     if is_prime(n):
-#         sum += n
-#     n += 2
-#     if n <= limit and is_prime(n):
-#         sum += n
-#     n += 4
-# end = timer()
-#
-# print('Sum is: ', sum)
-# print('Elapsed time: ', end - start)
+sum = 5
+n = 5
+while n <= limit:
+    if is_prime(n):
+        sum += n
+    n += 2
+    if n <= limit and is_prime(n):
+        sum += n
+    n += 4
+end = timer()
+
+print('Sum is: ', sum)
+print('Elapsed time: ', end - start)
 
 
 start = timer()
@@ -56,7 +56,7 @@ sieve = [False]*sieve_bound
 cross_limit = int(limit**(1/2) - 1) // 2
 for i in range(cross_limit):
     if not sieve[i]:
-        for j in range(2*(i+1)*(i+2), sieve_bound, 2*i + 3):
+        for j in range(3+i*(6+2*i), sieve_bound, 2*i + 3):
             sieve[j] = True
 sum = 2
 for i in range(sieve_bound):
