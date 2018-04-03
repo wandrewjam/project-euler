@@ -4,8 +4,7 @@ Project Euler Problem 12: Highly divisible triangular number
 
 # What is the value of the first triangle number to have over five hundred divisors?
 
-
-def prime_sieve(limit):
+def sieve(limit):
     sieve_bound = (limit - 1) // 2
     sieve = [False]*sieve_bound
     cross_limit = int(limit**(1/2) - 1) // 2
@@ -16,37 +15,57 @@ def prime_sieve(limit):
     return sieve
 
 
-def number_of_factors(number, prime_list):
-    if number < 2:
-        return 1
-    if number == 2:
-        return 2
-    if number == 3:
-        return 2
-    factors = 1
-    p_index = 0
-    p = prime_list[p_index]
-    while p**2 <= number and number % p == 0:
-        factor_count = 0
-        number //= p
-        factor_count += 1
-        factors *= factor_count
-        p_index += 1
-        p = prime_list[p_index]
-    return factors
-
-
-START = 10
+TARGET_DIVISORS = 500
 number_divisors = 0
-i = 0
+i = 32
+initial_sieve = sieve(TARGET_DIVISORS)
+prime_list = [2]
 
-# limit = 3
-# sieve = prime_sieve(limit)
-primes = [2, 3, 5]
-print(prime_factor(5, primes))
-# for i in range(len(sieve)):
-#     if not sieve[i]:
-#         prime_list.append(2*i+3)
-#
-# while number_divisors < 500:
-#     triangular_number = (START+i)*(START+i+1)/2
+for j in range(len(initial_sieve)):
+    if not initial_sieve[j]:
+        prime_list.append(2*j + 3)
+
+while number_divisors < TARGET_DIVISORS:
+    t_number = i*(i+1)//2
+
+    last_prime = prime_list[-1]
+    while last_prime**2 < t_number:
+        last_prime += 2
+        k = 0
+        isPrime = True
+        while (prime_list[k]**2 < last_prime) and isPrime:
+            if last_prime % prime_list[k] == 0:
+                isPrime = False
+            k += 1
+        if isPrime:
+            prime_list.append(last_prime)
+
+    factorization = []
+    j = 0
+    while t_number > 1:
+        if j >= len(prime_list):
+            factorization.append(t_number)
+            break
+
+        if t_number % prime_list[j] == 0:
+            t_number //= prime_list[j]
+            factorization.append(prime_list[j])
+        else:
+            j += 1
+    i += 1
+
+    number_divisors = 1
+    count = 1
+    for l in range(len(factorization)):
+        if l == 0:
+            count += 1
+        elif factorization[l] == factorization[l-1]:
+            count += 1
+        else:
+            number_divisors *= count
+            count = 2
+
+        if l == len(factorization) - 1:
+            number_divisors *= count
+
+print(i*(i-1)//2)
