@@ -36,7 +36,7 @@ end = timer()
 print(max_start)
 print(end - start)
 
-# A faster solution
+# A slightly faster solution
 
 start = timer()
 
@@ -51,7 +51,6 @@ def collatz(start):
     return collatz_list
 
 
-top = 10**5 - 1
 array = [True] * (top - 1)
 max_length = 1
 max_start = 1
@@ -65,6 +64,34 @@ for i in range(top - 1):
             max_length = len(collatz_list)
             max_start = i + 1
 
+end = timer()
+
+print(max_start)
+print(end - start)
+
+
+# A more slightly faster solution
+
+start = timer()
+
+array = [True] * top
+max_length = 1
+max_start = 1
+for i in range(1, top):
+    if array[i - 1]:
+        counter = 0
+        start_term = i
+        while i > 1:
+            counter += 1
+            if i % 2 == 0:
+                i //= 2
+            else:
+                i = 3*i + 1
+            if i < top - 1:
+                array[i - 1] = False
+        if counter > max_length:
+            max_length = counter
+            max_start = start_term
 end = timer()
 
 print(max_start)
